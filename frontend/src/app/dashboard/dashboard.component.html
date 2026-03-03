@@ -1,0 +1,176 @@
+<div class="page-container">
+    <h2 class="page-title mb-8 mt-2">Dashboard Overview</h2>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Total Employees -->
+        <div class="stat-card">
+            <div>
+                <p class="text-sm font-medium text-slate-500 mb-1">Total Employees</p>
+                <p class="text-3xl font-bold text-slate-800">{{ totalEmployees }}</p>
+            </div>
+            <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 shadow-inner">
+                <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+                    </path>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Pending Leave -->
+        <div class="stat-card">
+            <div>
+                <p class="text-sm font-medium text-slate-500 mb-1">Pending Leave</p>
+                <p class="text-3xl font-bold text-slate-800">{{ pendingLeaves }}</p>
+            </div>
+            <div class="w-14 h-14 bg-amber-50 rounded-xl flex items-center justify-center text-amber-500 shadow-inner">
+                <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Present Today -->
+        <div class="stat-card">
+            <div>
+                <p class="text-sm font-medium text-slate-500 mb-1">Present Today</p>
+                <p class="text-3xl font-bold text-slate-800">{{ presentToday }}</p>
+            </div>
+            <div
+                class="w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-500 shadow-inner">
+                <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+        </div>
+
+        <!-- On Leave Today -->
+        <div class="stat-card">
+            <div>
+                <p class="text-sm font-medium text-slate-500 mb-1">On Leave</p>
+                <p class="text-3xl font-bold text-slate-800">{{ onLeave }}</p>
+            </div>
+            <div
+                class="w-14 h-14 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600 shadow-inner">
+                <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                    </path>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Active Employees List -->
+        <div class="panel lg:col-span-2 flex flex-col">
+            <div class="panel-header">
+                <h3 class="panel-title">Employee Status Overview</h3>
+                <a routerLink="/employees"
+                    class="text-sm font-medium text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1 rounded-full transition-colors">View
+                    Directory</a>
+            </div>
+            <div class="p-6 flex-1 max-h-[500px] overflow-y-auto">
+                <div *ngIf="employees.length === 0"
+                    class="flex flex-col items-center justify-center h-full text-slate-400 py-8">
+                    <p class="text-sm font-medium">No employees found.</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div *ngFor="let emp of employees"
+                        class="flex items-center justify-between p-4 rounded-xl bg-slate-50/50 hover:bg-slate-50 border border-transparent hover:border-slate-100 transition-colors group">
+                        <div class="flex items-start">
+                            <div
+                                class="h-10 w-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold mr-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                {{ emp.name.charAt(0) || 'E' }}
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-800">{{ emp.name }}</p>
+                                <div class="flex items-center space-x-2 mt-1">
+                                    <span
+                                        class="px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider"
+                                        [ngClass]="emp.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-slate-200 text-slate-600'">
+                                        {{ emp.status }}
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded-full text-xs font-medium"
+                                        [ngClass]="getOfficeStatus(emp.id) === 'In Office' ? 'bg-blue-100 text-blue-800' : (getOfficeStatus(emp.id) === 'On Leave' ? 'bg-purple-100 text-purple-800' : 'bg-slate-100 text-slate-500')">
+                                        {{ getOfficeStatus(emp.id) }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Employee Block -->
+        <a routerLink="/employees"
+            class="bg-white p-6 rounded-3xl border border-slate-200 border-dashed hover:border-blue-500 hover:bg-blue-50/30 transition-all flex flex-col items-center justify-center text-center group cursor-pointer shadow-sm min-h-[250px] lg:h-auto">
+            <div
+                class="w-16 h-16 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-blue-100 transition-all">
+                <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z">
+                    </path>
+                </svg>
+            </div>
+            <h4 class="text-lg font-bold text-slate-800 mb-2 group-hover:text-blue-700">Add New Employee</h4>
+            <p class="text-sm text-slate-500 leading-relaxed px-4">Register a new team member to the HR portal quickly
+                and easily</p>
+        </a>
+    </div>
+
+    <!-- Second Row -->
+    <div class="grid grid-cols-1 gap-8 mt-8">
+        <!-- Recent Leave Requests -->
+        <div class="panel flex flex-col">
+            <div class="panel-header">
+                <h3 class="panel-title">Recent Leave Requests</h3>
+                <a routerLink="/leave"
+                    class="text-sm font-medium text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1 rounded-full transition-colors">View
+                    All</a>
+            </div>
+            <div class="p-6 flex-1">
+                <div *ngIf="recentLeaves.length === 0"
+                    class="flex flex-col items-center justify-center h-full text-slate-400 py-8">
+                    <svg class="w-16 h-16 mb-4 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+                        </path>
+                    </svg>
+                    <p class="text-sm font-medium">No recent leave requests</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div *ngFor="let leave of recentLeaves"
+                        class="flex items-center justify-between p-4 rounded-xl bg-slate-50/50 hover:bg-slate-50 border border-transparent hover:border-slate-100 transition-colors group">
+                        <div class="flex items-start">
+                            <div
+                                class="h-10 w-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold mr-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                {{ leave.employee?.name?.charAt(0) || 'E' }}
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-800">{{ leave.employee?.name || 'Employee ' +
+                                    leave.employee_id }}</p>
+                                <p class="text-xs text-slate-500 mt-0.5">{{ leave.start_date | date:'mediumDate' }} to
+                                    {{ leave.end_date | date:'mediumDate' }}</p>
+                                <p class="text-xs text-slate-400 mt-1 truncate max-w-[120px]" [title]="leave.reason">{{
+                                    leave.leave_type }} - {{ leave.reason }}</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider mb-2"
+                                [ngClass]="getLeaveStatusClass(leave.status)">
+                                {{ leave.status }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

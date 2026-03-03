@@ -1,0 +1,226 @@
+<div class="page-container">
+
+    <div class="page-header">
+        <div>
+            <h2 class="page-title">Leave Management</h2>
+            <p class="page-subtitle">Review and manage employee leave requests.</p>
+        </div>
+
+        <button (click)="openAddModal()" class="btn-primary">
+            <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            New Leave Request
+        </button>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="stat-card cursor-pointer hover:border-amber-300 transition-colors" (click)="setFilter('Pending')">
+            <div>
+                <p class="text-sm font-medium text-slate-500 mb-1">Pending Requests</p>
+                <p class="text-3xl font-bold text-amber-500">{{ pendingCount }}</p>
+            </div>
+            <div class="w-14 h-14 bg-amber-50 rounded-xl flex items-center justify-center text-amber-500">
+                <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+        </div>
+        <div class="stat-card cursor-pointer hover:border-green-300 transition-colors" (click)="setFilter('Approved')">
+            <div>
+                <p class="text-sm font-medium text-slate-500 mb-1">Approved Leaves</p>
+                <p class="text-3xl font-bold text-green-500">{{ approvedCount }}</p>
+            </div>
+            <div class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-green-500">
+                <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+        </div>
+        <div class="stat-card cursor-pointer hover:border-red-300 transition-colors" (click)="setFilter('Rejected')">
+            <div>
+                <p class="text-sm font-medium text-slate-500 mb-1">Rejected Leaves</p>
+                <p class="text-3xl font-bold text-red-500">{{ rejectedCount }}</p>
+            </div>
+            <div class="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center text-red-500">
+                <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel mt-6">
+        <div class="panel-header">
+            <h3 class="panel-title">Leave Requests</h3>
+
+            <div class="flex space-x-2 bg-slate-100 p-1 rounded-lg">
+                <button *ngFor="let filter of filters" (click)="setFilter(filter)"
+                    [class.bg-white]="currentFilter === filter" [class.shadow-sm]="currentFilter === filter"
+                    [class.text-slate-800]="currentFilter === filter" [class.text-slate-500]="currentFilter !== filter"
+                    class="px-4 py-1.5 text-sm font-medium rounded-md transition-all">
+                    {{ filter }}
+                </button>
+            </div>
+        </div>
+
+        <div class="p-0">
+            <div *ngIf="filteredLeaves.length === 0"
+                class="flex flex-col items-center justify-center py-16 text-slate-400">
+                <svg class="w-16 h-16 mb-4 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                    </path>
+                </svg>
+                <p class="text-sm font-medium">No leave requests found</p>
+            </div>
+
+            <div class="divide-y divide-slate-100">
+                <div *ngFor="let leave of filteredLeaves"
+                    class="p-6 hover:bg-slate-50/50 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="flex items-start">
+                        <div
+                            class="h-12 w-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-lg mr-4 shrink-0">
+                            {{ leave.employee?.name?.charAt(0) || 'E' }}
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-3">
+                                <h4 class="text-lg font-bold text-slate-800">{{ leave.employee?.name }}</h4>
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider"
+                                    [ngClass]="{'bg-amber-100 text-amber-800': leave.status === 'pending', 'bg-green-100 text-green-800': leave.status === 'approved', 'bg-red-100 text-red-800': leave.status === 'rejected'}">
+                                    {{ leave.status }}
+                                </span>
+                            </div>
+                            <p class="text-sm font-medium text-slate-600 mt-1">{{ leave.leave_type }}</p>
+
+                            <div class="flex flex-wrap items-center mt-3 gap-y-2 gap-x-6">
+                                <div class="flex items-center text-sm text-slate-500">
+                                    <svg class="w-4 h-4 mr-1.5 text-slate-400" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                        </path>
+                                    </svg>
+                                    From: <span class="text-slate-700 font-medium ml-1">{{ leave.start_date |
+                                        date:'mediumDate' }}</span>
+                                </div>
+                                <div class="flex items-center text-sm text-slate-500">
+                                    <svg class="w-4 h-4 mr-1.5 text-slate-400" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                        </path>
+                                    </svg>
+                                    To: <span class="text-slate-700 font-medium ml-1">{{ leave.end_date |
+                                        date:'mediumDate' }}</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-3 text-sm text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                <span class="font-medium">Reason: </span>{{ leave.reason || 'No reason provided' }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="leave.status === 'pending'"
+                        class="flex flex-row md:flex-col gap-2 shrink-0 md:pl-4 md:border-l border-slate-100">
+                        <button (click)="updateStatus(leave.id, 'approved')"
+                            class="flex-1 flex items-center justify-center px-4 py-2 border border-green-200 text-sm font-medium rounded-lg text-green-700 bg-green-50 hover:bg-green-100 hover:border-green-300 transition-colors">
+                            <svg class="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Approve
+                        </button>
+                        <button (click)="updateStatus(leave.id, 'rejected')"
+                            class="flex-1 flex items-center justify-center px-4 py-2 border border-red-200 text-sm font-medium rounded-lg text-red-700 bg-red-50 hover:bg-red-100 hover:border-red-300 transition-colors">
+                            <svg class="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                            Reject
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Leave Modal -->
+<div *ngIf="showModal" class="fixed z-50 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog"
+    aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity" (click)="closeModal()"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+        <div class="modal-container">
+            <form (ngSubmit)="submitLeave()" #leaveForm="ngForm">
+                <div class="bg-white px-6 pt-6 pb-2">
+                    <div class="flex justify-between items-center mb-5">
+                        <h3 class="text-xl leading-6 font-bold text-slate-800" id="modal-title">New Leave Request</h3>
+                        <button type="button" (click)="closeModal()"
+                            class="text-slate-400 hover:text-slate-600 bg-slate-50 hover:bg-slate-100 rounded-full p-2 transition-colors">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Employee</label>
+                            <select name="employee_id" [(ngModel)]="newLeave.employee_id" required class="form-input">
+                                <option *ngFor="let emp of employees" [value]="emp.id">{{ emp.name }}</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Leave Type</label>
+                            <select name="leave_type" [(ngModel)]="newLeave.leave_type" required class="form-input">
+                                <option value="Sick Leave">Sick Leave</option>
+                                <option value="Annual Leave">Annual Leave</option>
+                                <option value="Casual Leave">Casual Leave</option>
+                                <option value="Unpaid Leave">Unpaid Leave</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Start Date</label>
+                                <input type="date" name="start_date" [(ngModel)]="newLeave.start_date" required
+                                    class="form-input">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">End Date</label>
+                                <input type="date" name="end_date" [(ngModel)]="newLeave.end_date" required
+                                    class="form-input">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Reason</label>
+                            <textarea name="reason" [(ngModel)]="newLeave.reason" rows="3" required
+                                class="form-input"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-slate-50 px-6 py-4 flex justify-end space-x-3 border-t border-slate-100 rounded-b-2xl">
+                    <button type="button" (click)="closeModal()"
+                        class="px-5 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-700 font-medium hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-sm transition-colors">
+                        Cancel
+                    </button>
+                    <button type="submit" [disabled]="!leaveForm.form.valid"
+                        class="px-5 py-2.5 bg-blue-600 border border-transparent rounded-xl text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        Submit Request
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

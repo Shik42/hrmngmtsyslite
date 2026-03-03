@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900;
+  }
+}
+
+@layer components {
+  .app-sidebar {
+    @apply w-64 bg-white border-r border-slate-200 flex-col hidden md:flex z-10 shadow-sm relative;
+  }
+
+  .app-main {
+    @apply flex-1 flex flex-col min-w-0 overflow-hidden;
+  }
+
+  .app-header {
+    @apply h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0 relative z-20 shadow-sm;
+  }
+
+  /* Common UI Elements */
+  .page-container {
+    @apply px-2 pb-12 w-full animate-[fadeIn_0.5s_ease-out];
+  }
+
+  .page-header {
+    @apply flex flex-col md:flex-row justify-between items-start md:items-center mb-8 mt-2 space-y-4 md:space-y-0;
+  }
+
+  .page-title {
+    @apply text-3xl font-extrabold text-slate-800 tracking-tight;
+  }
+
+  .page-subtitle {
+    @apply text-slate-500 mt-1;
+  }
+
+  .stat-card {
+    @apply bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow;
+  }
+
+  .panel {
+    @apply bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden;
+  }
+
+  .panel-header {
+    @apply px-6 py-5 border-b border-slate-100 flex flex-col md:flex-row justify-between md:items-center bg-slate-50/30 gap-4;
+  }
+
+  .panel-title {
+    @apply text-lg font-bold text-slate-800;
+  }
+
+  .btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-medium shadow-sm hover:shadow-md transition-all whitespace-nowrap flex items-center;
+  }
+
+  .modal-overlay {
+    @apply fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity;
+  }
+
+  .modal-container {
+    @apply inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full border border-slate-100;
+  }
+
+  .form-input {
+    @apply w-full px-4 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow;
+  }
+}
+
+/* Custom scrollbar for sidebar and main content */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

@@ -1,0 +1,54 @@
+<div class="flex h-screen bg-slate-50 overflow-hidden font-sans">
+
+  <aside class="app-sidebar">
+    <div class="h-20 flex flex-col justify-center px-6 border-b border-slate-100">
+      <h1 class="text-2xl font-bold text-blue-600 tracking-tight">HRMS</h1>
+      <p class="text-xs text-slate-500 font-medium">Human Resource Management</p>
+    </div>
+
+    <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+      <a *ngFor="let item of menuItems" [routerLink]="item.path"
+        routerLinkActive="bg-blue-50 text-blue-700 font-semibold" [routerLinkActiveOptions]="{exact: false}"
+        class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200">
+        <svg class="w-5 h-5 mr-3 flex-shrink-0 transition-colors"
+          [ngClass]="{'text-blue-600': rla.isActive, 'text-slate-400 group-hover:text-slate-500': !rla.isActive}"
+          fill="none" viewBox="0 0 24 24" stroke="currentColor" #rla="routerLinkActive" routerLinkActive>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="item.icon"></path>
+        </svg>
+        {{ item.label }}
+      </a>
+    </nav>
+
+    <div class="p-4 border-t border-slate-200">
+      <div class="flex items-center">
+        <div class="h-10 w-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
+          HR
+        </div>
+        <div class="ml-3">
+          <p class="text-sm font-medium text-slate-700">HR Admin</p>
+          <p class="text-xs text-slate-500">admin&#64;company.com</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="app-main">
+    <header class="app-header">
+      <div class="md:hidden text-2xl font-bold text-blue-600">HRMS</div>
+
+      <div class="flex items-center justify-end w-full">
+        <div class="text-sm text-slate-500 font-medium bg-slate-50 px-4 py-2 rounded-lg border border-slate-100">
+          {{ currentDate | date:'EEEE, MMMM d, yyyy' }}
+        </div>
+      </div>
+    </header>
+
+    <div class="flex-1 overflow-auto bg-slate-50/50 relative">
+      <div class="absolute w-full h-64 bg-gradient-to-b from-blue-50/50 to-transparent top-0 left-0 point-events-none">
+      </div>
+      <div class="relative z-10 max-w-7xl mx-auto w-full h-full">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </main>
+</div>
