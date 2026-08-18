@@ -4,7 +4,8 @@ HRMS is a full-stack Human Resource Management System designed to streamline emp
 
 Built using Angular 17 + Tailwind CSS for the frontend and FastAPI + SQLAlchemy for the backend, the system provides a clean, responsive dashboard for HR administrators to manage workforce operations efficiently.
 
-🌐 **Live Demo:** [https://humanresourcesystem.vercel.app/dashboard](https://humanresourcesystem.vercel.app/dashboard)
+🌐 **Live Demo:** [https://hrmngmtsyslite-poz3.vercel.app/dashboard](https://hrmngmtsyslite-poz3.vercel.app/dashboard)
+🔌 **API:** [https://hrmngmtsyslite.onrender.com](https://hrmngmtsyslite.onrender.com)
 
 ## 🎯 Project Objective
 
